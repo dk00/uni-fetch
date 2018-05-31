@@ -1,0 +1,40 @@
+{
+  "name": "uni-fetch",
+  "version": "0.0.1",
+  "description": "Yet another convenient wrapper around fetch, for browser and node.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.js",
+  "main": "lib/index.js",
+  "files": [
+    "dist",
+    "lib"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "pretest": "npm run build",
+    "test": "nyc --instrument false --source-map false -r text -r html -r json lsc test"
+  },
+  "keywords": [
+    "fetch",
+    "http"
+  ],
+  "author": "dk00 <dk@csie.org>",
+  "license": "Unlicense",
+  "repository": "dk00/uni-fetch",
+  "bugs": "https://github.com/dk00/uni-fetch/issues",
+  "homepage": "https://github.com/dk00/uni-fetch#readme",
+  "devDependencies": {
+    "@babel/core": "",
+    "@babel/plugin-transform-modules-commonjs": "",
+    "@babel/preset-stage-0": "",
+    "@babel/register": "",
+    "babel-plugin-istanbul": "",
+    "babel-plugin-livescript": "",
+    "livescript": "",
+    "nyc": "",
+    "rollup": "",
+    "rollup-plugin-babel": "beta",
+    "rollup-plugin-node-resolve": "",
+    "tape": ""
+  }
+}

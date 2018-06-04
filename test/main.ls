@@ -3,6 +3,7 @@ import \../src/index : {uni-fetch}
 function main t
   global.fetch = (...args) -> args
   global.URL = require \url .URL
+  global.URLSearchParams = require \url .URLSearchParams
 
   [url] = uni-fetch '/user?id=12345'
 
@@ -10,13 +11,13 @@ function main t
   expected = url
   t.is actual, expected, 'pass original url to fetch'
 
-  [url] = uni-fetch '/user' data: id: \12345
+  [url] = uni-fetch 'https://api.com/user' data: id: \12345
 
   actual = url.to-string!
-  expected = '/user?id=12345'
+  expected = 'https://api.com/user?id=12345'
   t.same actual, expected, 'add data as search parameters'
 
-  [url, init] = uni-fetch '/user' data:
+  [url, init] = uni-fetch '/user' mode: \no-cors data:
     deeply: nested:
       object: \value
       array: [1 value: 2]
@@ -38,7 +39,14 @@ function main t
   actual = init?headers
   t.false actual, 'no additional headers for GET'
 
-  [url, init] = uni-fetch '/user' method: \post data: value: 1
+  actual = init?mode
+  expected = \no-cors
+  t.is actual, expected, 'pass other options'
+
+  data = value: 1
+  headers = Authorization: \q
+
+  [url, init] = uni-fetch '/user' {method: \post headers, data}
 
   actual = url
   expected = '/user'
@@ -50,14 +58,30 @@ function main t
 
   actual = init.headers?'Content-Type'
   expected = 'application/json'
-  t.is actual, expected, 'add content type for json request body'
+  t.is actual, expected, 'content type for json request body'
+
+  actual = init.headers?'Authorization'
+  expected = \q
+  t.is actual, expected, 'merge header values'
 
   actual = init.body
   expected = JSON.stringify value: 1
   t.is actual, expected, 'pack JSON request body'
 
+  data = value: 1 nested: array: [2]
+  [, init] = uni-fetch \user {request-type: \urlencoded data}
 
-  #Content-Type is automatically set for string, FormData, URLSearchParams
+  actual = init.method.to-lower-case!
+  expected = \post
+  t.is actual, expected, 'method defaults to post if having request body'
+
+  actual = init.headers?'Content-Type'
+  expected = 'application/x-www-urlencoded'
+  t.is actual, expected, 'content type for urlencoded request body'
+
+  actual = decode-URI-component init.body.to-string!
+  expected = 'value=1&nested[array][0]=2'
+  t.is actual, expected, 'send data as form urlencoded'
 
   t.end!
 

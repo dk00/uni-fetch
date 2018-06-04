@@ -48,6 +48,10 @@ function request-body {data, request-type=\json}
     'Content-Type': content-types[request-type]
   body: encode[request-type] data
 
+function smart-response res
+  if res.headers'Content-Type' == 'application/json' then res.json!
+  else res
+
 function uni-fetch url, {headers, data}: options={}
   method = request-method options
   final-url = if have-request-body method then url
@@ -60,5 +64,6 @@ function uni-fetch url, {headers, data}: options={}
     options
     if headers || base-headers
       headers: Object.assign {} base-headers, headers
+  .then smart-response
 
 export {default: uni-fetch, uni-fetch}

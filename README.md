@@ -62,4 +62,12 @@ When converting `data` to search parameters, nested objects are encoded to be un
 > TODO: FormData application/x-www-form-urlencoded
 > TODO: base64 encode inner Blob
 
+- `data`: the data to be sent as search parameters(`GET`) or the request body(other method).
+
 ## Smart Response
+
+Response body is automatically converted by proper method, based on `Content-Type` of response header. Supported types are:
+
+- `application/json`: `.json`
+- `text/plain`: `.text`
+- `application/octect-stream`: `.blob`

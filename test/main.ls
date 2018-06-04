@@ -1,23 +1,37 @@
 import \../src/index : {uni-fetch}
 
+function test-response t
+  r =
+    headers: 'Content-Type': 'application/json'
+    json: -> Promise.resolve value: 1
+
+  global.fetch = (...args) -> Promise.resolve r
+
+  actual = await uni-fetch '/'
+  expected = value: 1
+  t.same actual, expected, 'convert response JSON to object'
+
+  t.end!
+
 function main t
-  global.fetch = (...args) -> args
+  global.fetch = (...args) ->
+    Promise.resolve Object.assign [] args, headers: {}
   global.URL = require \url .URL
   global.URLSearchParams = require \url .URLSearchParams
 
-  [url] = uni-fetch '/user?id=12345'
+  [url] = await uni-fetch '/user?id=12345'
 
   actual = url
   expected = url
   t.is actual, expected, 'pass original url to fetch'
 
-  [url] = uni-fetch 'https://api.com/user' data: id: \12345
+  [url] = await uni-fetch 'https://api.com/user' data: id: \12345
 
   actual = url.to-string!
   expected = 'https://api.com/user?id=12345'
   t.same actual, expected, 'add data as search parameters'
 
-  [url, init] = uni-fetch '/user' mode: \no-cors data:
+  [url, init] = await uni-fetch '/user' mode: \no-cors data:
     deeply: nested:
       object: \value
       array: [1 value: 2]
@@ -46,7 +60,7 @@ function main t
   data = value: 1
   headers = Authorization: \q
 
-  [url, init] = uni-fetch '/user' {method: \post headers, data}
+  [url, init] = await uni-fetch '/user' {method: \post headers, data}
 
   actual = url
   expected = '/user'
@@ -69,7 +83,7 @@ function main t
   t.is actual, expected, 'pack JSON request body'
 
   data = value: 1 nested: array: [2]
-  [, init] = uni-fetch \user {request-type: \urlencoded data}
+  [, init] = await uni-fetch \user {request-type: \urlencoded data}
 
   actual = init.method.to-lower-case!
   expected = \post
@@ -82,6 +96,7 @@ function main t
   actual = decode-URI-component init.body.to-string!
   expected = 'value=1&nested[array][0]=2'
   t.is actual, expected, 'send data as form urlencoded'
+  t.test test-response, 'Smart response'
 
   t.end!
 

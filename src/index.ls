@@ -12,25 +12,53 @@ function query-key key
   [first]concat rest.map -> "[#it]"
   .join ''
 
+function add-entries params, data
+  expand-entries data .for-each ({key, value}) ->
+    params.set (query-key key), value
+  params
+
 function with-params url, data
   if !data then url
   else
     prefix = if url.includes '://' then '' else 'http://q/'
     merged = new URL prefix + url
-    expand-entries data .for-each ({key, value}) ->
-      merged.search-params.set (query-key key), value
+    add-entries merged.search-params, data
     if prefix then merged.to-string!slice prefix.length else merged
 
-function have-request-body {method}={}
-  method && method.to-lower-case! != \get
+function have-request-body method
+  method && !/get|head|option/test method
 
-function uni-fetch url, {method, data}: options={}
-  final-url = if have-request-body options then url else with-params url, data
+function request-method {method, request-type} => switch
+  | method => method.to-lower-case!
+  | request-type => \post
 
-  fetch final-url, Object.assign {},
+function create-search-params data
+  add-entries new URLSearchParams, data
+
+content-types =
+  json: 'application/json'
+  urlencoded: 'application/x-www-urlencoded'
+
+encode =
+  json: -> JSON.stringify it
+  urlencoded: create-search-params
+
+function request-body {data, request-type=\json}
+  headers:
+    'Content-Type': content-types[request-type]
+  body: encode[request-type] data
+
+function uni-fetch url, {headers, data}: options={}
+  method = request-method options
+  final-url = if have-request-body method then url
+  else with-params url, data
+  if have-request-body method
+    {body, headers: base-headers} = request-body options
+
+  fetch final-url, Object.assign {body},
     if method then {method}
-    if have-request-body options
-      headers: 'Content-Type': 'application/json'
-      body: JSON.stringify data
+    options
+    if headers || base-headers
+      headers: Object.assign {} base-headers, headers
 
-export {default: uni-fetch, uni-fetch}
+export default: uni-fetch

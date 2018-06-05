@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - node
+before_install: if [[ `npm -v` != 5* ]]; then npm i -g npm; fi
+cache:
+  directories:
+    - node_modules
+after_success:
+  - npx codecov -f coverage/coverage-final.json --disable=gcov

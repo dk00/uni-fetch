@@ -9,8 +9,10 @@ Yet another convenient wrapper around fetch, for browser and node.js.
 
 ## Why
 
-- `fetch` is good, but not easy enough.
-- minimal code for modern browsers. `axios` is still too big(5kb gzipped).
+- `fetch` is good, but not easy enough
+- Minimal code for modern browsers. `axios` is still too big(5kb gzipped)
+- Minimal config
+- Focused to RESTFul API
 
 ## Installing
 
@@ -27,6 +29,8 @@ Using cdn:
 Performing a `GET` request
 
 ```js
+import {uniFetch} from 'uni-fetch'
+
 // Make a request for a user with a given id
 uniFetch('/user?id=12345')
 .then(data => console.log(data))
@@ -47,14 +51,15 @@ async getUser = () => {
 }
 ```
 
-## Search Parameters / Query String
+## Smart Request Body
 
-`data` is sent as search parameters when making a `GET` request.
+If `data` is a plain Javascript object, it will be encoded automatically and sent as search parameters, or request body, based on `method` and `requestType`.
 
-Values in `data` are merged with existing parameters in `url`
+## Smart Search Parameters
 
-Nested objects and arrays are packed into query strings properly, so that `req.query` of `express` is the same values of `data`.
+When converting `data` to search parameters, nested objects are encoded to be understanded by `express`, so that `req.query` is same as `data`.
 
-## Request Config
+> TODO: FormData application/x-www-form-urlencoded
+> TODO: base64 encode inner Blob
 
-- `data`: the data to be sent as search parameters(`GET`) or the request body(other method).
+## Smart Response

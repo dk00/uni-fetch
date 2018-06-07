@@ -52,7 +52,7 @@ function smart-response res
   if res.headers'Content-Type' == 'application/json' then res.json!
   else res
 
-function uni-fetch url, {headers, data}: options={}
+function zero-fetch url, {headers, data}: options={}
   method = request-method options
   final-url = if have-request-body method then url
   else with-params url, data
@@ -66,4 +66,4 @@ function uni-fetch url, {headers, data}: options={}
       headers: Object.assign {} base-headers, headers
   .then smart-response
 
-export default: uni-fetch
+export default: zero-fetch

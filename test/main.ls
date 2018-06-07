@@ -1,4 +1,4 @@
-import \../src/index : uni-fetch
+import \../src/index : zero-fetch
 
 function test-response t
   r =
@@ -7,7 +7,7 @@ function test-response t
 
   global.fetch = (...args) -> Promise.resolve r
 
-  actual = await uni-fetch '/'
+  actual = await zero-fetch '/'
   expected = value: 1
   t.same actual, expected, 'convert response JSON to object'
 
@@ -19,19 +19,19 @@ function main t
   global.URL = require \url .URL
   global.URLSearchParams = require \url .URLSearchParams
 
-  [url] = await uni-fetch '/user?id=12345'
+  [url] = await zero-fetch '/user?id=12345'
 
   actual = url
   expected = url
   t.is actual, expected, 'pass original url to fetch'
 
-  [url] = await uni-fetch 'https://api.com/user' data: id: \12345
+  [url] = await zero-fetch 'https://api.com/user' data: id: \12345
 
   actual = url.to-string!
   expected = 'https://api.com/user?id=12345'
   t.same actual, expected, 'add data as search parameters'
 
-  [url, init] = await uni-fetch '/user' mode: \no-cors data:
+  [url, init] = await zero-fetch '/user' mode: \no-cors data:
     deeply: nested:
       object: \value
       array: [1 value: 2]
@@ -60,7 +60,7 @@ function main t
   data = value: 1
   headers = Authorization: \q
 
-  [url, init] = await uni-fetch '/user' {method: \post headers, data}
+  [url, init] = await zero-fetch '/user' {method: \post headers, data}
 
   actual = url
   expected = '/user'
@@ -83,7 +83,7 @@ function main t
   t.is actual, expected, 'pack JSON request body'
 
   data = value: 1 nested: array: [2]
-  [, init] = await uni-fetch \user {request-type: \urlencoded data}
+  [, init] = await zero-fetch \user {request-type: \urlencoded data}
 
   actual = init.method.to-lower-case!
   expected = \post

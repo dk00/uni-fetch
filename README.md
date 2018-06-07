@@ -1,10 +1,10 @@
-# uni-fetch
+# zero-fetch
 
 Yet another convenient wrapper around fetch, for browser and node.js.
 
 [![build status](https://travis-ci.org/dk00/uni-fetch.svg)](https://travis-ci.org/dk00/uni-fetch)
 [![coverage](https://codecov.io/gh/dk00/uni-fetch/branch/master/graph/badge.svg)](https://codecov.io/gh/dk00/uni-fetch)
-[![npm](https://img.shields.io/npm/v/uni-fetch.svg)](https://npm.im/uni-fetch)
+[![npm](https://img.shields.io/npm/v/zero-fetch.svg)](https://npm.im/zero-fetch)
 [![dependencies](https://david-dm.org/dk00/uni-fetch/status.svg)](https://david-dm.org/dk00/uni-fetch)
 
 ## Why
@@ -18,28 +18,28 @@ Yet another convenient wrapper around fetch, for browser and node.js.
 
 Using npm:
 
-`$ npm i -D uni-fetch`
+`$ npm i -D zero-fetch`
 
 Using cdn:
 
-`<script src="https://unpkg.com/uni-fetch/dist/index.js"></script>`
+`<script src="https://unpkg.com/zero-fetch/dist/index.js"></script>`
 
 ## Example
 
 Performing a `GET` request
 
 ```js
-import {uniFetch} from 'uni-fetch'
+import zeroFetch from 'zero-fetch'
 
 // Make a request for a user with a given id
-uniFetch('/user?id=12345')
+zeroFetch('/user?id=12345')
 .then(data => console.log(data))
 .catch(error => console.log(error))
 
 // Optionally the request above could also be done as
 async getUser = () => {
   try {
-    const data = await uniFetch('/user', {
+    const data = await zeroFetch('/user', {
       data: {
         id: 12345
       }

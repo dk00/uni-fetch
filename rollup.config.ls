@@ -7,7 +7,7 @@ targets =
   * \src/index.ls \dist/index.js \iife
   * \src/index.ls \lib/index.js \cjs
 
-name = \UniFetch
+name = \F0
 
 config-list = targets.map ([input, output, format]) ->
   input: input

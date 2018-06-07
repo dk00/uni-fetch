@@ -1,5 +1,5 @@
 {
-  "name": "uni-fetch",
+  "name": "zero-fetch",
   "version": "0.0.1",
   "description": "Yet another convenient wrapper around fetch, for browser and node.js",
   "module": "dist/index.esm.js",

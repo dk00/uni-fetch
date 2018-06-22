@@ -49,7 +49,7 @@ function request-body {data, request-type=\json}
   body: encode[request-type] data
 
 function smart-response res
-  if res.headers'Content-Type' == 'application/json' then res.json!
+  if /application\/json/itest res.headers.get 'content-type' then res.json!
   else res
 
 function zero-fetch url, {headers, data}: options={}

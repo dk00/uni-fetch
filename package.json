@@ -1,9 +1,9 @@
 {
   "name": "zero-fetch",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Yet another convenient wrapper around fetch, for browser and node.js",
   "module": "dist/index.esm.js",
-  "browser": "dist/index.js",
+  "unpkg": "dist/index.js",
   "main": "lib/index.js",
   "files": [
     "dist",

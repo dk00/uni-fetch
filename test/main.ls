@@ -2,7 +2,10 @@ import \../src/index : zero-fetch
 
 function test-response t
   r =
-    headers: 'Content-Type': 'application/json'
+    headers: get: (name) ->
+      if name.to-lower-case! == 'content-type'
+        'application/json ; charset=utf-8'
+      else void
     json: -> Promise.resolve value: 1
 
   global.fetch = (...args) -> Promise.resolve r
@@ -15,7 +18,7 @@ function test-response t
 
 function main t
   global.fetch = (...args) ->
-    Promise.resolve Object.assign [] args, headers: {}
+    Promise.resolve Object.assign [] args, headers: get: ->
   global.URL = require \url .URL
   global.URLSearchParams = require \url .URLSearchParams
 
